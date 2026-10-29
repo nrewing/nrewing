@@ -1,0 +1,169 @@
+/* Nathan Ewing site. One stylesheet shared by all five pages.
+   Tokens first, so a color or size change happens in one place. */
+:root {
+  --ground: #F6F1E6;   /* cream page background */
+  --ink: #14233C;      /* navy: all body text and headings */
+  --accent: #B5483E;   /* Nantucket red: buttons, rules, accents (4.7:1 on cream) */
+  --surface: #E9E4D8;  /* slightly darker cream for panels */
+  --tint: #DCE2EC;     /* pale navy tint for the ticket stub */
+  --muted: #4A5568;    /* secondary text (6.7:1 on cream) */
+
+  /* Five type sizes, clearly apart */
+  --s1: 0.875rem;
+  --s2: 1.0625rem;
+  --s3: 1.375rem;
+  --s4: 2rem;
+  --s5: clamp(2.5rem, 8vw, 4.5rem);
+
+  --head: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 var(--s2)/1.6 var(--body);
+}
+
+/* Theme the browser's own surfaces too */
+::selection { background: var(--ink); color: var(--ground); }
+html { caret-color: var(--accent); }
+
+img, svg { max-width: 100%; height: auto; }
+
+a { color: var(--ink); text-underline-offset: 0.2em; text-decoration-thickness: 2px; }
+a:hover { color: var(--accent); }
+
+/* Keyboard focus is always visible */
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Layout ---------- */
+.wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.25rem; }
+
+/* Skip link for keyboard users; appears only on focus */
+.skip {
+  position: absolute; left: -999px; top: 0;
+  background: var(--ink); color: var(--ground); padding: 0.75rem 1rem;
+}
+.skip:focus { left: 0; z-index: 10; }
+
+/* ---------- Header and navigation ---------- */
+.site-header { border-bottom: 4px solid var(--ink); }
+.site-header .wrap {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 0.25rem 1.5rem;
+}
+.brand {
+  font: 800 var(--s3)/1 var(--head); text-transform: uppercase;
+  letter-spacing: 0.02em; text-decoration: none; padding: 0.9rem 0;
+}
+.brand:hover { color: var(--ink); }
+.nav { display: flex; flex-wrap: wrap; gap: 0 0.25rem; margin: 0; padding: 0; list-style: none; }
+.nav a {
+  display: inline-flex; align-items: center; min-height: 44px;   /* touch target */
+  padding: 0 0.7rem; font: 600 var(--s1)/1 var(--head);
+  text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none;
+  border-bottom: 4px solid transparent; margin-bottom: -4px;
+}
+.nav a:hover { border-bottom-color: var(--accent); color: var(--ink); }
+.nav a[aria-current="page"] { border-bottom-color: var(--accent); }
+
+/* ---------- Type ---------- */
+h1, h2, h3 { font-family: var(--head); line-height: 1.05; margin: 0 0 0.75rem; }
+h1 { font-size: var(--s5); font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; }
+h2 { font-size: var(--s4); font-weight: 800; text-transform: uppercase; }
+h3 { font-size: var(--s3); font-weight: 700; }
+p { margin: 0 0 1rem; max-width: 40rem; }
+.lede { font-size: var(--s3); line-height: 1.4; max-width: 34rem; }
+.muted { color: var(--muted); }
+main { padding: 2.5rem 0 4rem; }
+section + section { margin-top: 3rem; }
+
+/* Placeholder text: dashed red outline so it is easy to spot and replace */
+.ph {
+  border: 2px dashed var(--accent); padding: 0.75rem 1rem;
+  background: var(--surface); max-width: 40rem; margin: 0 0 1rem;
+}
+.ph p { margin: 0; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.25rem;
+  background: var(--accent); color: #fff; font: 700 var(--s1)/1 var(--head);
+  text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none;
+  border: 2px solid var(--accent);
+}
+.btn:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+.btn.alt { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.alt:hover { background: var(--ink); color: var(--ground); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+
+/* A control that is not live yet: visibly disabled, not a dead link */
+.off {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem;
+  border: 2px dashed var(--accent); color: var(--muted);
+  font: 600 var(--s1)/1.2 var(--body);
+}
+
+/* ---------- The ticket stub (the site's one design device) ---------- */
+.ticket {
+  position: relative; display: grid; grid-template-columns: 1fr;
+  background: var(--surface); border: 2px solid var(--ink);
+}
+.ticket .main { padding: 1.5rem; }
+.ticket .stub {
+  padding: 1.5rem; background: var(--tint);
+  border-top: 2px dashed var(--ink);         /* the perforation on phones */
+}
+/* Punched notches where the stub tears off: ground-colored circles sitting on the perforation.
+   They hang off .stub so they follow it however tall it gets. */
+.ticket .stub { position: relative; }
+.ticket .stub::before, .ticket .stub::after {
+  content: ""; position: absolute; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ground); top: -12px;
+}
+.ticket .stub::before { left: -13px; }
+.ticket .stub::after  { right: -13px; }
+.ticket .label { font: 700 var(--s1)/1 var(--head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.5rem; }
+.ticket ul { margin: 0; padding: 0; list-style: none; }
+.ticket li { padding: 0.35rem 0; border-bottom: 1px solid rgba(20,35,60,0.25); }
+.ticket li:last-child { border-bottom: 0; }
+
+@media (min-width: 48rem) {
+  .ticket { grid-template-columns: 1fr 15rem; }
+  .ticket .stub { border-top: 0; border-left: 2px dashed var(--ink); }
+  /* On desktop the tear line is vertical, so the notches move to the top and bottom edges */
+  .ticket .stub::before { left: -12px; top: -13px; }
+  .ticket .stub::after  { left: -12px; right: auto; top: auto; bottom: -13px; }
+}
+
+/* ---------- Home hero ---------- */
+.hero { display: grid; gap: 2rem; align-items: start; }
+.photo { margin: 0; }
+.photo img { display: block; width: 100%; max-width: 20rem; border: 2px solid var(--ink); }
+.photo figcaption { font-size: var(--s1); color: var(--muted); margin-top: 0.5rem; }
+@media (min-width: 48rem) {
+  .hero { grid-template-columns: 1fr 18rem; gap: 3rem; }
+}
+
+/* ---------- Contact list ---------- */
+.contact-list { list-style: none; margin: 0; padding: 0; max-width: 34rem; }
+.contact-list li { border-top: 2px solid var(--ink); padding: 1rem 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; align-items: baseline; }
+.contact-list li:last-child { border-bottom: 2px solid var(--ink); }
+.contact-list .k { font: 700 var(--s1)/1 var(--head); text-transform: uppercase; letter-spacing: 0.06em; min-width: 6rem; }
+
+/* ---------- Footer ---------- */
+.site-footer { border-top: 4px solid var(--ink); padding: 1.5rem 0 2.5rem; font-size: var(--s1); color: var(--muted); }
+.site-footer p { margin: 0; max-width: none; }
+
+/* ---------- Motion: one quiet page-load moment, off for reduced-motion users ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  main { animation: settle 0.5s ease-out both; }
+  @keyframes settle { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .btn, .nav a { transition: background-color 0.15s, color 0.15s, border-color 0.15s; }
+}
